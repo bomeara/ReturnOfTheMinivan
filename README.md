@@ -15,9 +15,12 @@ Top authors: Soltis DE (15), Soltis PS (15), Ashman TL (10), Pires JC (9), Rothw
 
 DI field has DOI
 
+```
 library(bibliometrix)
+library(fulltext)
 
-setwd("/Users/bomeara/Documents/MyDocuments/GitClones/ReturnOfTheMinivan/data")
+
+#setwd("/Users/bomeara/Documents/MyDocuments/GitClones/ReturnOfTheMinivan/data")
 
 files <- list.files(pattern=".txt")
 all.files <- data.frame()
@@ -32,9 +35,9 @@ for (i in seq_along(files)) {
 }
 
 
-library(fulltext)
-#fulltext::cache_options_set(path="data/pdfcache")
+fulltext::cache_options_set(path="../../../../../Users/bomeara/Documents/MyDocuments/GitClones/ReturnOfTheMinivan/data/pdfcache")
 #fulltext::ft_get("10.1002/ajb2.1180") # gets the PDF
 text <- fulltext::ft_extract(ft_get(all.files[1,"DI"]))$wiley$data # is all the text
+```
 
 You can edit this to get rid of the references field, then pass to rphylotastic to get names
