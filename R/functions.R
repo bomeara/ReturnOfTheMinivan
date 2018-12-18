@@ -28,9 +28,8 @@ DownloadAndExtractAllPDFs <- function(references.df) {
   fulltext::cache_options_set(path="../../../../../Users/bomeara/Documents/MyDocuments/GitClones/ReturnOfTheMinivan/data/pdfcache") #yes, this is stupid
   references.txt <- vector("list", nrow(references.df))
   for (i in seq_along(references.df$DI)) {
-    if (i<5) {
-    try(references.txt[[i]] <- fulltext::ft_extract(ft_get(all.files[i,"DI"]))
-    }
+    try(references.txt[[i]] <- fulltext::ft_extract(ft_get(references.df[i,"DI"])))
+    Sys.sleep(5)
   }
   return(references.txt)
 }
