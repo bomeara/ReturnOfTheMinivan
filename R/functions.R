@@ -29,7 +29,7 @@ DownloadAndExtractAllPDFs <- function(references.df) {
   references.txt <- vector("list", nrow(references.df))
   for (i in seq_along(references.df$DI)) {
     try(references.txt[[i]] <- fulltext::ft_extract(ft_get(references.df[i,"DI"])))
-    Sys.sleep(5)
+    Sys.sleep(30+runif(1,0,80))
   }
   return(references.txt)
 }
