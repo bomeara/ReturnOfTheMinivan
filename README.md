@@ -15,8 +15,26 @@ Top authors: Soltis DE (15), Soltis PS (15), Ashman TL (10), Pires JC (9), Rothw
 
 DI field has DOI
 
+library(bibliometrix)
+
+setwd("/Users/bomeara/Documents/MyDocuments/GitClones/ReturnOfTheMinivan/data")
+
+files <- list.files(pattern=".txt")
+all.files <- data.frame()
+for (i in seq_along(files)) {
+  local.files <- bibliometrix::readFiles(files[i])
+  local.files <- bibliometrix::convert2df(local.files, dbsource = "isi", format = "plaintext")
+  if(i==1) {
+    all.files <- local.files
+  } else {
+    all.files <- plyr::rbind.fill(all.files, local.files)
+  }
+}
+
+
 library(fulltext)
-ft_get("10.1002/ajb2.1180") # gets the PDF
-ft_extract(ft_get("10.1002/ajb2.1180"))$wiley$data # is all the text
+#fulltext::cache_options_set(path="data/pdfcache")
+#fulltext::ft_get("10.1002/ajb2.1180") # gets the PDF
+text <- fulltext::ft_extract(ft_get(all.files[1,"DI"]))$wiley$data # is all the text
 
 You can edit this to get rid of the references field, then pass to rphylotastic to get names
