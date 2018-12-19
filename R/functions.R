@@ -41,7 +41,9 @@ DownloadAndExtractAllPDFs <- function(references.df) {
 #' @param references.df data.frame from GetAllReferences
 #' @return list of information
 CacheAllPDFsImmediately <- function(references.df) {
-  fulltext::cache_options_set(path="../../../../../Users/bomeara/Documents/MyDocuments/GitClones/ReturnOfTheMinivan/data/pdfcache") #yes, this is stupid
-  cache_all <- fulltext::ft_get(references.df$DI)
+  #fulltext::cache_options_set(path="../../../../../Users/bomeara/Documents/MyDocuments/GitClones/ReturnOfTheMinivan/data/pdfcache") #yes, this is stupid
+  fulltext::cache_options_set(full_path="/Users/bomeara/Documents/MyDocuments/GitClones/ReturnOfTheMinivan/data/pdfcache") 
+
+  cache_all <- fulltext::ft_get(rev(references.df$DI))
   return(cache_all)
 }
