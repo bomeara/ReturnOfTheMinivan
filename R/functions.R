@@ -42,6 +42,6 @@ DownloadAndExtractAllPDFs <- function(references.df) {
 #' @return list of information
 CacheAllPDFsImmediately <- function(references.df) {
   fulltext::cache_options_set(path="../../../../../Users/bomeara/Documents/MyDocuments/GitClones/ReturnOfTheMinivan/data/pdfcache") #yes, this is stupid
-  cache_all <- fulltext::ft_get(references.df$DI[1:3])
+  cache_all <- fulltext::ft_get(references.df$DI)
   return(cache_all)
 }
