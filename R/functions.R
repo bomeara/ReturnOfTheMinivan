@@ -248,3 +248,23 @@ CalculateCoverage <- function(input) {
   print(result)
   return(result)
 }
+
+#' Make tree of genera
+#'
+#' Using Smith and Brown's ALLMB.tre, merge species to genera
+#' @return A chronogram of genera
+GenusTree <- function() {
+  phy <- ape::read.tree("data/v0.1/GBMB.tre")
+  taxa <- phy$tip.label
+  GetGenus <- function(x) {
+    return(strsplit(x, "_")[[1]][1])
+  }
+  genera <- unique(unname(sapply(taxa, GetGenus)))
+  for (genus.index in seq_along(genera)) {
+    to_kill <- taxa[grepl(paste0(genera[genus.index],"_"), taxa)][-1] #delete all but one
+    if(length(to_kill)>0) {
+      phy <- ape::drop.tip(phy, tip=to_kill)
+    }
+  }
+  return(phy)
+}

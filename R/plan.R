@@ -22,5 +22,6 @@ my_plan_immediately <- drake_plan(
   species_by_genus_ajb = GetMatches(species_by_genus, taxonomy_aggregated$genus, "ajb"),
   taxonomy_aggregated_smith_brown = ProcessSmithBrown(),
   species_by_genus_ajb_sb = GetMatches(species_by_genus_ajb, taxonomy_aggregated_smith_brown$genus, "smith_brown"),
-  coverage = CalculateCoverage(species_by_genus_ajb_sb)
+  coverage = CalculateCoverage(species_by_genus_ajb_sb),
+  genus_tree = GenusTree()
 )
