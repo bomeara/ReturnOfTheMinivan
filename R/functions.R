@@ -249,6 +249,12 @@ CalculateCoverage <- function(input) {
   return(result)
 }
 
+#' Get the genus only
+#' @param A species name with an underscore between genus and species
+GetGenus <- function(x) {
+  return(strsplit(x, "_")[[1]][1])
+}
+
 #' Make tree of genera
 #'
 #' Using Smith and Brown's ALLMB.tre, merge species to genera
@@ -256,9 +262,6 @@ CalculateCoverage <- function(input) {
 GenusTree <- function() {
   phy <- ape::read.tree("data/v0.1/GBMB.tre")
   taxa <- phy$tip.label
-  GetGenus <- function(x) {
-    return(strsplit(x, "_")[[1]][1])
-  }
   genera <- unique(unname(sapply(taxa, GetGenus)))
   for (genus.index in seq_along(genera)) {
     to_kill <- taxa[grepl(paste0(genera[genus.index],"_"), taxa)][-1] #delete all but one
