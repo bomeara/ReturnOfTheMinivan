@@ -23,5 +23,7 @@ my_plan_immediately <- drake_plan(
   taxonomy_aggregated_smith_brown = ProcessSmithBrown(),
   species_by_genus_ajb_sb = GetMatches(species_by_genus_ajb, taxonomy_aggregated_smith_brown$genus, "smith_brown"),
   coverage = CalculateCoverage(species_by_genus_ajb_sb),
-  genus_tree = GenusTree()
+  genus_tree = GenusTree(),
+  tnrs_genus_tree = TNRSGenusTree(genus_tree),
+  save_tnrs_genus_tree = ape::write.tree(tnrs_genus_tree, file=file_out("tnrs_genus_tree.tre"))
 )

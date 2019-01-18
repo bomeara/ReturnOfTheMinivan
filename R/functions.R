@@ -252,7 +252,7 @@ CalculateCoverage <- function(input) {
 #' Make tree of genera
 #'
 #' Using Smith and Brown's ALLMB.tre, merge species to genera
-#' @return A chronogram of genera
+#' @return A chronogram of one species per genus
 GenusTree <- function() {
   phy <- ape::read.tree("data/v0.1/GBMB.tre")
   taxa <- phy$tip.label
@@ -264,6 +264,20 @@ GenusTree <- function() {
     to_kill <- taxa[grepl(paste0(genera[genus.index],"_"), taxa)][-1] #delete all but one
     if(length(to_kill)>0) {
       phy <- ape::drop.tip(phy, tip=to_kill)
+    }
+  }
+  return(phy)
+}
+
+#' TNRS genus tree
+#'
+#' @param Chronogram of species, one per genus
+#' @return Chronogram of genera
+TNRSGenusTree <- function(phy) {
+  resolved_taxa <- taxize::gnr_resolve(names=unique(unname(sapply(phy$tip.label, GetGenus))), source=1, with_context=TRUE, best_match_only=TRUE) #CoL
+  for (i in seq_along(phy$tip.label)) {
+    if(phy$tip.label[i] %in% resolved_taxa$user_supplied_name) {
+      phy$tip.label[i] <- resolved_taxa$matched_name[which(resolved_taxa$user_supplied_name==phy$tip.label[i])[1]]
     }
   }
   return(phy)
