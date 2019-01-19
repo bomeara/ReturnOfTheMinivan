@@ -277,7 +277,16 @@ GenusTree <- function() {
 #' @param Chronogram of species, one per genus
 #' @return Chronogram of genera
 TNRSGenusTree <- function(phy) {
-  resolved_taxa <- taxize::gnr_resolve(names=unique(unname(sapply(phy$tip.label, GetGenus))), source=1, with_context=TRUE, best_match_only=TRUE) #CoL
+  all.tips <- unique(unname(sapply(phy$tip.label, GetGenus)))
+  resolved_taxa <- data.frame()
+  chunk_size <- 100
+  for (i in seq(1, length(all.tips), chunk_size)) {
+
+    seq_size <- chunk_size
+    if ((i + seq_size) > length(all.tips)) seq_size <- length(all.tips) - i + 1
+
+    resolved_taxa <- rbind(resolved_taxa, taxize::gnr_resolve(names=all.tips[i:i+seq_size], source=1, with_context=TRUE, best_match_only=TRUE)) #CoL
+  }
   for (i in seq_along(phy$tip.label)) {
     if(phy$tip.label[i] %in% resolved_taxa$user_supplied_name) {
       phy$tip.label[i] <- resolved_taxa$matched_name[which(resolved_taxa$user_supplied_name==phy$tip.label[i])[1]]
