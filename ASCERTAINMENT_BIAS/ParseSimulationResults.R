@@ -1,0 +1,70 @@
+library(corHMM)
+load("SimulationResults.rda")
+
+truerate01 <- rates[1,2]
+truerate10 <- rates[2,1]
+
+all.results.array <- simplify2array(sim.results.list)
+
+PlotOneTaxon <- function(taxon, all.results.array, truerate01, truerate10) {
+  rates01 <- unlist(all.results.array['rate01', taxon,])
+  rates10 <- unlist(all.results.array['rate10', taxon,])
+  bad <- which(is.na(rates01))
+  if(length(bad)>0) {
+    rates01 <- rates01[-bad]
+    rates10 <- rates10[-bad]
+  }
+  plot(x=range(all.results.array['rate01',,], na.rm=TRUE), y=range(all.results.array['rate10',,], na.rm=TRUE), bty="n", xlab="q01", ylab="q10", type="n", log="xy", main=taxon)
+  abline(v=truerate01, lty="dashed")
+  abline(h=truerate10, lty="dashed")
+  if(length(rates01)>0) {
+    points(rates01, rates10, pch=20, col=rgb(0,0,0,.5))
+  }
+}
+
+for (taxon.index in sequence(dim(all.results.array)[2])) {
+  PlotOneTaxon(colnames(all.results.array)[taxon.index], all.results.array, truerate01, truerate10)
+}
+
+all.rates <- data.frame(matrix(nrow=dim(all.results.array)[2], ncol=4))
+rownames(all.rates) <- colnames(all.results.array)
+
+for (taxon.index in sequence(dim(all.results.array)[2])) {
+  taxon <- colnames(all.results.array)[taxon.index]
+  rates01 <- unlist(all.results.array['rate01', taxon,])
+  rates10 <- unlist(all.results.array['rate10', taxon,])
+  bad <- which(is.na(rates01))
+  if(length(bad)>0) {
+    rates01 <- rates01[-bad]
+    rates10 <- rates10[-bad]
+  }
+  if(length(rates01)>0) {
+    fraction.rate.01 <- rates01/(rates01+rates10)
+
+    average.rates <- (rates01 + rates10) / 2
+    all.rates[taxon.index, 1] <- median(average.rates)
+    all.rates[taxon.index, 2] <- sd(average.rates)
+    all.rates[taxon.index, 3] <- all.results.array['ntip', taxon,1][[1]]
+    all.rates[taxon.index, 4] <- dim(all.results.array)[3] - length(bad)
+    all.rates[taxon.index, 5] <- median(fraction.rate.01)
+
+  }
+}
+colnames(all.rates) <- c("median.avg.rate", "sd.avg.rate", "ntax", "sims.with.variation", "median.fraction.rate.01")
+
+all.rates <- all.rates[order(all.rates[,3], decreasing=TRUE),]
+
+barplot(all.rates[,1], log="y", ylab="Median of average transition rate")
+abline(h=(truerate01+truerate10)/2)
+
+plot(x=all.rates[,3], y=all.rates[,1]/((truerate01+truerate10)/2), type="p", pch=19, xlab="ntax", ylab="median deviation from true average rate", bty="n", log="xy", col=rgb(0,0,0,.5))
+abline(h=1, lty="dotted")
+
+plot(x=all.rates$median.avg.rate, y=all.rates$median.fraction.rate.01, pch=19, bty="n", log="xy", col=rgb(0,0,0,.5), xlab="average rate", ylab="01 rate / total rate")
+
+abline(v=(truerate01+truerate10)/2, lty="dotted")
+abline(h=truerate01 / (truerate01+truerate10), lty="dotted")
+abline(h=0.5)
+
+
+write.csv(all.rates, file="AverageRates.csv")

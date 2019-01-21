@@ -1,0 +1,50 @@
+
+R version 3.4.0 (2017-04-21) -- "You Stupid Darkness"
+Copyright (C) 2017 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> source("Functions.R")
+Skipping install of 'corHMM' from a github remote, the SHA1 (0b6a910d) has not changed since last install.
+  Use `force = TRUE` to force installation
+Loading required package: nloptr
+Loading required package: GenSA
+> library(ape)
+> library(phytools)
+Loading required package: maps
+> library(geiger)
+> load("ResultThreshold0.5.rda")
+> phy <- result1_0.5$phy
+> rates <- result1_0.5$solution
+> diag(rates) <- -rowSums(rates, na.rm=TRUE)
+> if(file.exists("SubtreesForSimulation.rda")) {
++   load("SubtreesForSimulation.rda")
++ } else {
++   trees.100 <- phytools::getCladesofSize(phy,100)
++   trees.500 <- phytools::getCladesofSize(phy, 500)
++   trees.1000 <- phytools::getCladesofSize(phy,100)
++   save(list=ls(), file="SubtreesForSimulation.rda")
++ }
+> 
+> DoSingleSimRep <- function(phy, rates, subtrees) {
++   chars <- geiger::sim.char(phy, par=list(rates), nsim=1, model="discrete", root=sample.int(2,1))
++   char.corhmm <- data.frame(species=rownames(chars), trait=unname(chars), stringsAsFactors=FALSE)
++ 
++ }
+> 
+> proc.time()
+   user  system elapsed 
+451.165  53.292 518.849 

@@ -1,0 +1,43 @@
+
+R version 3.4.1 (2017-06-30) -- "Single Candle"
+Copyright (C) 2017 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+[Previously saved workspace restored]
+
+> library(corHMM)
+Loading required package: ape
+Loading required package: nloptr
+Loading required package: GenSA
+> load("SimulationResultsMultipleLevels.rda")
+> library(viridis)
+Loading required package: viridisLite
+> truerate01 <- rates[1,2]
+> truerate10 <- rates[2,1]
+> 
+> #remember 0 to 1 is temperate to tropical
+> 
+> # First, need to label the random taxa
+> for (i in sequence(length(sim.results.list))) {
++   local.data <- sim.results.list[[i]]
++   missing.labels <- which(nchar(colnames(local.data))==0)
++   colnames(local.data)[missing.labels] <- local.data$label[missing.labels]
++   sim.results.list[[i]] <- local.data
++ }
+Error in colnames(local.data)[missing.labels] <- local.data$label[missing.labels] : 
+  replacement has length zero
+Execution halted
