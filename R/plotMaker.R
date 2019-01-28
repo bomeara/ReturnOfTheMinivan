@@ -13,7 +13,7 @@
 
 MakePlot<-function(phy, data, pars, col.vec){
 
-    tmp <- rayDISC(phy, data, p=pars, model="ARD", node.states="marginal")
+    tmp <- rayDISC(phy, data, p=pars, model="ARD", node.states="marginal", root.p="yang")
 
     phy <- tmp$phy
     phy<- ladderize(phy, right=FALSE)

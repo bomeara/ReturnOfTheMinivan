@@ -388,10 +388,10 @@ PlotRecon <- function(pruned, recon, outfile="recon.pdf") {
   dev.off()
 }
 
-PlotJeremy <- function(pruned, outfile="jeremy.pdf") {
+PlotCorhmm <- function(pruned, outfile="corhmm.pdf") {
   tips <- data.frame(Genus_species =rownames(pruned$data),  states=as.numeric(pruned$data[,"genus_binary"]))
   pdf(file=outfile, width=30, height=30)
-MakePlot(pruned$phy, tips, pars=c(0,1), col.vec=c("gray", "red"))
+MakePlot(pruned$phy, tips, pars=c(.001, 0), col.vec=c("red", "gray"))
 dev.off()
 
 }

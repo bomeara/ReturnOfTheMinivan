@@ -31,10 +31,8 @@ my_plan_immediately <- drake_plan(
   tip_data=MakeTipData(tnrs_genus_only_tree, species_by_genus_ajb_sb),
   tip_data_ade = MakeTipDataForAde(tip_data),
   pruned = PruneAll(tnrs_genus_only_tree, tip_data_ade),
-  bullseye_plot = PlotBullseye(pruned, outfile=file_out("bull.pdf")),
-  genus_recon = AceRecon2(pruned),
-  branch_plot = PlotRecon(pruned,genus_recon, outfile=file_out("recon.pdf")),
-  jeremy_plot = PlotJeremy(pruned, outfile=file_out("jeremy.pdf")),
-  jeremy_data = DataForJeremy(pruned, tnrs_genus_only_tree, tip_data),
-  save_data_for_jeremy = save(jeremy_data, file="jeremydata.rda")
+#  bullseye_plot = PlotBullseye(pruned, outfile=file_out("bull.pdf")),
+  #genus_recon = AceRecon2(pruned),
+  #branch_plot = PlotRecon(pruned,genus_recon, outfile=file_out("recon.pdf")),
+  corhmm_plot = PlotCorhmm(pruned, outfile=file_out("corhmm.pdf"))
 )
