@@ -1,0 +1,45 @@
+---
+title: "TropicalTemperate"
+author: "Brian O'Meara and Jeremy Beaulieu"
+date: "7/7/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(cache=TRUE)
+devtools::install_github("thej022214/corHMM") #dev version of corHMM
+library(ape)
+library(corHMM)
+library(geiger)
+
+Discretize <- function(x, threshold=0.5) {
+  x[x<threshold] <- 0
+  x[x>=threshold] <- 1
+  return(x)
+}
+
+DoSingleAnalysis <- function(tree, data, threshold=0.5) {
+   data.local <- data
+   data.local$region <- Discretize(data.local$region, threshold)
+   data.local <- data.local[,-3]
+   result <- corHMM(tree, data.local, rate.cat=1, root.p="maddfitz")
+   return(result)
+}
+```
+
+```{r}
+tree <- ape::read.tree("camp.fossils.rootcon.dated.2.tre")
+print(tree)
+data <- read.delim("camp.trop.temp.txt", stringsAsFactors = FALSE)
+head(data)
+rownames(data) <- data[,1]
+pruned <- geiger::treedata(tree, data, warnings=TRUE)
+tree <- pruned$phy
+data <- pruned$data
+data <- data.frame(species=data[,"species"], region=as.numeric(data[,"region"]), tot.records=as.numeric(data[,"tot.records"]), stringsAsFactors=FALSE)
+head(data)
+print(tree)
+result1 <- DoSingleAnalysis(tree, data, 0.5)
+print(result1)
+```

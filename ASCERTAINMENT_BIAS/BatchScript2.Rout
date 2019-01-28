@@ -1,0 +1,231 @@
+
+R version 3.4.0 (2017-04-21) -- "You Stupid Darkness"
+Copyright (C) 2017 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+[Previously saved workspace restored]
+
+> source("Functions.R")
+Skipping install of 'corHMM' from a github remote, the SHA1 (0b6a910d) has not changed since last install.
+  Use `force = TRUE` to force installation
+Loading required package: nloptr
+Loading required package: GenSA
+> tree <- ape::read.tree("camp.fossils.rootcon.dated.2.tre")
+> print(tree)
+
+Phylogenetic tree with 14256 tips and 14255 internal nodes.
+
+Tip labels:
+	Grindelia_fastigiata, Grindelia_decumbens, Grindelia_laciniata, Grindelia_camporum, Grindelia_stricta, Grindelia_hallii, ...
+
+Rooted; includes branch lengths.
+> data <- read.delim("camp.trop.temp.txt", stringsAsFactors = FALSE)
+> head(data)
+                species region tot.records
+1   Aciphylla_glacialis      0         122
+2     Anisotome_haastii      0         415
+3      Gingidia_montana      0         219
+4       Gingidia_enysii      0          12
+5       Gingidia_algens      0          44
+6 Gingidia_trifoliolata      0         152
+> rownames(data) <- data[,1]
+> pruned <- geiger::treedata(tree, data, warnings=TRUE)
+Warning messages:
+1: In geiger::treedata(tree, data, warnings = TRUE) :
+  The following tips were not found in 'data' and were dropped from 'phy':
+	Abelia_chinensis
+	Abelia_engleriana
+	Abelia_floribunda
+	Abelia_forrestii
+	Abelia_graebneriana
+	Abelia_macrotera
+	Abelia_myrtilloides
+	Abelia_parvifolia
+	Abelia_schumannii
+	Abelia_serrata
+	Abelia_uniflora
+	Acantholepis_orientalis
+	Achillea_apiculata
+	Achillea_biebersteinii
+	Achillea_cretica
+	Achillea_crithmifolia
+	Achillea_erba_rotta
+	Achillea_euxina
+	Achillea_inundata
+	Achillea_leptophylla
+	Achillea_ligustica
+	Achillea_macrophylla
+	Achillea_micrantha
+	Achillea_monticola
+	Achillea_morisiana
+	Achillea_moschata
+	Achillea_nana
+	Achillea_ochroleuca
+	Achillea_pannonica
+	Achillea_pindicola
+	Achillea_pratensis
+	Achillea_pseudoaleppica
+	Achillea_pyrenaica
+	Achillea_roseoalba
+	Achillea_santolina
+	Achillea_schurii
+	Achillea_sergievskiana
+	Achillea_setacea
+	Achillea_tenuifolia
+	Achillea_wilhelmsii
+	Achyrocline_madioides
+	Achyropappus_queretarensis
+	Acicarpha_obtusisepala
+	Acilepis_chiangdaoensis
+	Acilepis_divergens
+	Acilepis [... truncated]
+2: In geiger::treedata(tree, data, warnings = TRUE) :
+  The following tips were not found in 'phy' and were dropped from 'data':
+	Achillea_arabica
+	Achillea_erba-rota
+	Achillea_santolinoides
+	Achillea_seidlii
+	Acmella_uliginosa
+	Aetheolaena_campanulata
+	Aetheolaena_cuencana
+	Aetheolaena_heterophylla
+	Aetheolaena_otophora
+	Aetheorhiza_bulbosa
+	Afrosciadium_magalismontanum
+	Ageratina_lasioneura
+	Ageratina_popayanensis
+	Ageratina_rivalis
+	Ainsliaea_hayatae
+	Ainsworthia_elegans
+	Aldama_arenaria
+	Aldama_bracteata
+	Aldama_discolor
+	Aldama_macrorhiza
+	Aldama_squalida
+	Aletes_anisatus
+	Anacyclus_australis
+	Angelica_laevigata
+	Angelica_nubigena
+	Angelica_pyrenaea
+	Angelica_smithii
+	Anisopappus_chinensis
+	Anisosciadium_chrysanthum
+	Anisosciadium_tenuifolium
+	Anthemis_candidissima
+	Anthriscus_nitida
+	Aralia_elegans
+	Aralia_tomentella
+	Arctanthemum_integrifolium
+	Arctotis_aenea
+	Arctotis_candida
+	Arctotis_diffusa
+	Arctotis_leptorhiza
+	Arctotis_linearis
+	Arcuatopterus_sikkimensis
+	Arnoglossum_reniforme
+	Artemisia_alpina
+	Artemisia_carnifolia
+	Artemisia_ [... truncated]
+> tree <- pruned$phy
+> data <- pruned$data
+> data <- data.frame(species=data[,"species"], region=as.numeric(data[,"region"]), tot.records=as.numeric(data[,"tot.records"]), stringsAsFactors=FALSE)
+> head(data)
+                                    species region tot.records
+Aciphylla_glacialis     Aciphylla_glacialis      0         122
+Anisotome_haastii         Anisotome_haastii      0         415
+Gingidia_montana           Gingidia_montana      0         219
+Gingidia_enysii             Gingidia_enysii      0          12
+Gingidia_algens             Gingidia_algens      0          44
+Gingidia_trifoliolata Gingidia_trifoliolata      0         152
+> print(tree)
+
+Phylogenetic tree with 10700 tips and 10699 internal nodes.
+
+Tip labels:
+	Grindelia_decumbens, Grindelia_integrifolia, Grindelia_fraxinipratensis, Grindelia_adenodonta, Grindelia_hirsutula, Grindelia_squarrosa, ...
+
+Rooted; includes branch lengths.
+> rate.cats <- c(1,2,3)
+> thresholds <- c(0.5, 0.05, 0.95)
+> all.results <- list()
+> for (rate.cat.index in sequence(length(rate.cats))) {
++   for(threshold.index in sequence(length(thresholds))) {
++     print(paste0("Starting RateCat_",rate.cats[rate.cat.index], "_Threshold_",thresholds[threshold.index]))
++     local.result <- DoSingleAnalysis(tree, data, thresholds[threshold.index], n.cores=2, rate.cat=rate.cats[rate.cat.index], nstarts=2, node.states="none")
++     all.results[[length(all.results)+1]] <- local.result
++     names(all.results)[length(all.results)] <- paste0("RateCat_",rate.cats[rate.cat.index], "_Threshold_",thresholds[threshold.index])
++     save(list=ls(), file="EmpiricalResults.rda")
++   }
++ }
+[1] "Starting RateCat_1_Threshold_0.5"
+State distribution in data:
+States:	0	1	
+Counts:	7419	3281	
+Beginning thorough optimization search -- performing 2 random restarts 
+Finished. Performing diagnostic tests. 
+[1] "Starting RateCat_1_Threshold_0.05"
+State distribution in data:
+States:	0	1	
+Counts:	6310	4390	
+Beginning thorough optimization search -- performing 2 random restarts 
+Finished. Performing diagnostic tests. 
+[1] "Starting RateCat_1_Threshold_0.95"
+State distribution in data:
+States:	0	1	
+Counts:	8515	2185	
+Beginning thorough optimization search -- performing 2 random restarts 
+Finished. Performing diagnostic tests. 
+[1] "Starting RateCat_2_Threshold_0.5"
+State distribution in data:
+States:	0	1	
+Counts:	7419	3281	
+Beginning thorough optimization search -- performing 2 random restarts 
+Finished. Performing diagnostic tests. 
+[1] "Starting RateCat_2_Threshold_0.05"
+State distribution in data:
+States:	0	1	
+Counts:	6310	4390	
+Beginning thorough optimization search -- performing 2 random restarts 
+Finished. Performing diagnostic tests. 
+[1] "Starting RateCat_2_Threshold_0.95"
+State distribution in data:
+States:	0	1	
+Counts:	8515	2185	
+Beginning thorough optimization search -- performing 2 random restarts 
+Finished. Performing diagnostic tests. 
+[1] "Starting RateCat_3_Threshold_0.5"
+State distribution in data:
+States:	0	1	
+Counts:	7419	3281	
+Beginning thorough optimization search -- performing 2 random restarts 
+Finished. Performing diagnostic tests. 
+[1] "Starting RateCat_3_Threshold_0.05"
+State distribution in data:
+States:	0	1	
+Counts:	6310	4390	
+Beginning thorough optimization search -- performing 2 random restarts 
+Finished. Performing diagnostic tests. 
+[1] "Starting RateCat_3_Threshold_0.95"
+State distribution in data:
+States:	0	1	
+Counts:	8515	2185	
+Beginning thorough optimization search -- performing 2 random restarts 
+Finished. Performing diagnostic tests. 
+> 
+> proc.time()
+      user     system    elapsed 
+115454.773   1351.434 100093.322 

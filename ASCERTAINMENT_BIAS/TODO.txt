@@ -1,0 +1,7 @@
+Start sims but look only at large genera and other higher order taxa
+
+Start sims at tropical only
+
+Include random sampling of entire group with same number of taxa as the densely sampled ones above. See if random better than focal clades
+
+Plot avg rate on X axis, ratio of trop->temp over all rate on y.

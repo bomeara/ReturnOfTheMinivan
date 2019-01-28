@@ -1,0 +1,64 @@
+
+R version 3.4.1 (2017-06-30) -- "Single Candle"
+Copyright (C) 2017 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+[Previously saved workspace restored]
+
+> library(corHMM)
+Loading required package: ape
+Loading required package: nloptr
+Loading required package: GenSA
+> yearn::yearn(RateViz)
+
+Attaching package: ‘expm’
+
+The following object is masked from ‘package:Matrix’:
+
+    expm
+
+The following object is masked from ‘package:ape’:
+
+    balance
+
+
+Attaching package: ‘igraph’
+
+The following objects are masked from ‘package:ape’:
+
+    edges, mst, ring
+
+The following objects are masked from ‘package:stats’:
+
+    decompose, spectrum
+
+The following object is masked from ‘package:base’:
+
+    union
+
+> 
+> 
+> load("EmpiricalResults.rda")
+> for (i in sequence(length(all.results))) {
++   pdf(file=paste0(names(all.results)[[i]], "_Figure_AICc_",all.results[[i]]$AICc,".pdf"), width=10, height=10)
++   PlotBubbleMatrix(all.results[[i]]$solution)
++   dev.off()
++ }
+> 
+> proc.time()
+   user  system elapsed 
+  2.515   0.172   3.067 
