@@ -313,7 +313,7 @@ TNRSGenusOnlyTree <- function(phy) {
 #' genus_nspecies is number of species in the genus
 #' family_nspecies is number of species in the family containing this genus
 MakeTipData <- function(phy, species_by_genus_ajb_sb) {
-  tip.data <- data.frame(taxon=phy$tip.label, family=NA, genus_binary=NA, family_three=NA, genus_nspecies=NA, family_nspecies=NA, stringsAsFactors=FALSE)
+  tip.data <- data.frame(taxon=phy$tip.label, family=NA, genus_binary=0, family_three=NA, genus_nspecies=NA, family_nspecies=NA, stringsAsFactors=FALSE)
   for (i in seq_along(phy$tip.label)) {
     relevant.row <- which(species_by_genus_ajb_sb$genus==phy$tip.label[i])
     if(length(relevant.row)==1) {
@@ -339,7 +339,9 @@ MakeTipDataForAde <- function(tip_data) {
 
 PruneAll <- function(phy, tip_data_ade) {
   pruned <- geiger::treedata(phy=phy, data=tip_data_ade, sort=TRUE, warnings=FALSE)
-  #pruned$phy <- ape::multi2di(pruned$phy)
+  min_brlen <- min(pruned$phy$edge.length)
+  pruned$phy <- ape::multi2di(pruned$phy)
+  pruned$phy$edge.length[which(pruned$phy$edge.length<1e-10)] <- max(1e-10, 0.00001*min_brlen)
   return(pruned)
 }
 
@@ -354,4 +356,41 @@ AceRecon <- function(pruned) {
   tips <- as.numeric(pruned$data[,"family_three"])
   recon <- ape::ace(tips, multi2di(pruned$phy), type="discrete", model=rates)
   return(recon)
+}
+
+AceRecon2 <- function(pruned) {
+    rates <- matrix(c(0, 1, 0, 0), nrow=2, byrow=TRUE)
+    tips <- as.numeric(pruned$data[,"genus_binary"])
+    recon <- ape::ace(tips, pruned$phy, type="discrete", model=rates)
+    return(recon)
+}
+
+PlotSimmap2 <- function(pruned, outfile="simmap.pdf") {
+  pdf(file=outfile, width=20, height=20)
+  rates <- matrix(c(0, 1, 0, 0), nrow=2, byrow=TRUE)
+  sim <- phytools::make.simmap(tree=pruned$phy, x=as.numeric(pruned$data[,"genus_binary"]), model="ARD", Q=rates)
+  phytools::plotSimmap(sim)
+  dev.off()
+}
+
+PlotPhytools <- function(pruned, outfile="branchbytrait.pdf") {
+  pdf(file=outfile, width=20, height=20)
+  tips <- as.numeric(pruned$data[,"genus_binary"])
+  plotBranchbyTrait(pruned$phy, tips, mode="tips")
+  dev.off()
+}
+
+PlotRecon <- function(pruned, recon, outfile="recon.pdf") {
+  pdf(file=outfile, width=20, height=20)
+  corHMM::plotRECON(pruned$phy, recon$lik.anc,piecolors=c("gray", "red"))
+
+  dev.off()
+}
+
+PlotJeremy <- function(pruned, outfile="jeremy.pdf") {
+  tips <- data.frame(Genus_species =rownames(pruned$data),  states=as.numeric(pruned$data[,"genus_binary"]))
+  pdf(file=outfile, width=30, height=30)
+MakePlot(pruned$phy, tips, pars=c(0,1), col.vec=c("gray", "red"))
+dev.off()
+
 }

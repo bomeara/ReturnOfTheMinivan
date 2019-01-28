@@ -32,5 +32,7 @@ my_plan_immediately <- drake_plan(
   tip_data_ade = MakeTipDataForAde(tip_data),
   pruned = PruneAll(tnrs_genus_only_tree, tip_data_ade),
   bullseye_plot = PlotBullseye(pruned, outfile=file_out("bull.pdf")),
-  family_recon = AceRecon(pruned)
+  genus_recon = AceRecon2(pruned),
+  branch_plot = PlotRecon(pruned,genus_recon, outfile=file_out("recon.pdf")),
+  jeremy_plot = PlotJeremy(pruned, outfile=file_out("jeremy.pdf"))
 )
