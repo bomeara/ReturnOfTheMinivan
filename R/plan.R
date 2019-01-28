@@ -25,5 +25,12 @@ my_plan_immediately <- drake_plan(
   coverage = CalculateCoverage(species_by_genus_ajb_sb),
   genus_tree = GenusTree(),
   tnrs_genus_tree = TNRSGenusTree(genus_tree),
-  save_tnrs_genus_tree = ape::write.tree(tnrs_genus_tree, file=file_out("tnrs_genus_tree.tre"))
+  save_tnrs_genus_tree = ape::write.tree(tnrs_genus_tree, file=file_out("tnrs_genus_tree.tre")),
+  tnrs_genus_only_tree = TNRSGenusOnlyTree(tnrs_genus_tree),
+  save_tnrs_genus_only_tree = ape::write.tree(tnrs_genus_only_tree, file=file_out("tnrs_genus_only_tree.tre")),
+  tip_data=MakeTipData(tnrs_genus_only_tree, species_by_genus_ajb_sb),
+  tip_data_ade = MakeTipDataForAde(tip_data),
+  pruned = PruneAll(tnrs_genus_only_tree, tip_data_ade),
+  bullseye_plot = PlotBullseye(pruned, outfile=file_out("bull.pdf")),
+  family_recon = AceRecon(pruned)
 )

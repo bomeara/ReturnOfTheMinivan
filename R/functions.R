@@ -274,7 +274,7 @@ GenusTree <- function() {
 
 #' TNRS genus tree
 #'
-#' @param Chronogram of species, one per genus
+#' @param phy Chronogram of species, one per genus
 #' @return Chronogram of genera
 TNRSGenusTree <- function(phy) {
   all.tips <- unique(unname(sapply(phy$tip.label, GetGenus)))
@@ -293,4 +293,65 @@ TNRSGenusTree <- function(phy) {
     }
   }
   return(phy)
+}
+
+#' TNRS only genera
+#' @param phy chronogram with species name already tnrs'ed
+#' @return Chronogram of actual genera
+TNRSGenusOnlyTree <- function(phy) {
+  for (i in seq_along(phy$tip.label)) {
+    phy$tip.label[i] <- GetGenus(phy$tip.label[i])
+  }
+  return(phy)
+}
+
+#' Get tip states
+#'
+#' Gets presence absence of a group in the AJB.
+#' genus_binary is 0 or 1 (1=present)
+#' family_three is 0=absent, 1=family present, not this genus, 2=family and genus present
+#' genus_nspecies is number of species in the genus
+#' family_nspecies is number of species in the family containing this genus
+MakeTipData <- function(phy, species_by_genus_ajb_sb) {
+  tip.data <- data.frame(taxon=phy$tip.label, family=NA, genus_binary=NA, family_three=NA, genus_nspecies=NA, family_nspecies=NA, stringsAsFactors=FALSE)
+  for (i in seq_along(phy$tip.label)) {
+    relevant.row <- which(species_by_genus_ajb_sb$genus==phy$tip.label[i])
+    if(length(relevant.row)==1) {
+      tip.data$genus_binary[i] <- ifelse(species_by_genus_ajb_sb$ajb[relevant.row],1,0)
+      tip.data$genus_nspecies[i] <- species_by_genus_ajb_sb$nspecies[relevant.row]
+      tip.data$family[i] <- species_by_genus_ajb_sb$family[relevant.row]
+      family_rows <- which(species_by_genus_ajb_sb$family==species_by_genus_ajb_sb$family[relevant.row])
+      if(length(family_rows)>0) {
+        tip.data$family_three[i] <- tip.data$genus_binary[i] + ifelse(any(species_by_genus_ajb_sb$ajb[family_rows]),1,0)
+        tip.data$family_nspecies <- sum(species_by_genus_ajb_sb$nspecies[family_rows])
+      }
+    }
+  }
+  return(tip.data)
+}
+
+# get rid of text cols
+MakeTipDataForAde <- function(tip_data) {
+  rownames(tip_data) <- tip_data$taxon
+  tip_data <- tip_data[,-c(1,2)]
+  return(tip_data)
+}
+
+PruneAll <- function(phy, tip_data_ade) {
+  pruned <- geiger::treedata(phy=phy, data=tip_data_ade, sort=TRUE, warnings=FALSE)
+  #pruned$phy <- ape::multi2di(pruned$phy)
+  return(pruned)
+}
+
+PlotBullseye <- function(pruned, outfile="bull.pdf") {
+  pdf(file=outfile, width=20, height=20)
+  adephylo::bullseye(phy=pruned$phy, traits=pruned$data, legend=FALSE, alpha=0.5, cex=0.3)
+  dev.off()
+}
+
+AceRecon <- function(pruned) {
+  rates <- matrix(c(0, 1, 0, 0, 0, 1, 0, 0, 0), nrow=3, byrow=TRUE)
+  tips <- as.numeric(pruned$data[,"family_three"])
+  recon <- ape::ace(tips, multi2di(pruned$phy), type="discrete", model=rates)
+  return(recon)
 }
