@@ -382,6 +382,7 @@ PlotPhytools <- function(pruned, outfile="branchbytrait.pdf") {
 
 PlotRecon <- function(pruned, recon, outfile="recon.pdf") {
   pdf(file=outfile, width=20, height=20)
+
   corHMM::plotRECON(pruned$phy, recon$lik.anc,piecolors=c("gray", "red"))
 
   dev.off()
@@ -393,4 +394,8 @@ PlotJeremy <- function(pruned, outfile="jeremy.pdf") {
 MakePlot(pruned$phy, tips, pars=c(0,1), col.vec=c("gray", "red"))
 dev.off()
 
+}
+
+DataForJeremy <- function(pruned, chronogram, tip_data) {
+  return(list(phy.pruned=pruned$phy, tips.pruned=data.frame(Genus_species =rownames(pruned$data), states=as.numeric(pruned$data[,"genus_binary"])), phy.all=chronogram, tip.all=tip_data))
 }
