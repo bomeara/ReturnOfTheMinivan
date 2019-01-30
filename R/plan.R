@@ -34,5 +34,6 @@ my_plan_immediately <- drake_plan(
 #  bullseye_plot = PlotBullseye(pruned, outfile=file_out("bull.pdf")),
   #genus_recon = AceRecon2(pruned),
   #branch_plot = PlotRecon(pruned,genus_recon, outfile=file_out("recon.pdf")),
-  corhmm_plot = PlotCorhmm(pruned, outfile=file_out("corhmm.pdf"))
+  corhmm_plot = PlotCorhmm(pruned, outfile=file_out("corhmm.pdf")),
+  phylo_signal = GetPhylogeneticSignal(pruned)
 )

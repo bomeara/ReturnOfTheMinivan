@@ -399,3 +399,15 @@ dev.off()
 DataForJeremy <- function(pruned, chronogram, tip_data) {
   return(list(phy.pruned=pruned$phy, tips.pruned=data.frame(Genus_species =rownames(pruned$data), states=as.numeric(pruned$data[,"genus_binary"])), phy.all=chronogram, tip.all=tip_data))
 }
+
+GetPhylogeneticSignal <- function(pruned) {
+  tips <- as.numeric(pruned$data[,"genus_binary"])
+  names(tips) <- rownames(pruned$data)
+  none <- geiger::fitDiscrete(pruned$phy, tips, model="ARD", transform="none", control=list(niter=5000))
+  lambda <- geiger::fitDiscrete(pruned$phy, tips, model="ARD", transform="lambda", control=list(niter=5000))
+  print("none")
+  print(none)
+  print("lambda")
+  print(lambda)
+  return(list(none=none, lambda=lambda))
+}
