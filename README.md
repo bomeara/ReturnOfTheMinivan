@@ -41,3 +41,7 @@ text <- fulltext::ft_extract(ft_get(all.files[1,"DI"]))$wiley$data # is all the 
 ```
 
 You can edit this to get rid of the references field, then pass to rphylotastic to get names
+
+## To run
+
+This uses [drake](https://ropenscilabs.github.io/drake-manual/index.html) to run the analyses. The necessary functions, packages, etc are described in scripts in the R directory. To rerun the analysis, just `source("make.R")` within R (or, better so it can run unattended: `nohup R CMD BATCH make.R > nohup.out &`).
