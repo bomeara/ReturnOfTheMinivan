@@ -1,5 +1,5 @@
 # ReturnOfTheMinivan
-Data for response to Edwards &amp; Donoghue's response to Beaulieu and O'Meara. We have more cupholders, and they come filled with data! [and cheerios]
+Data for response to Donoghue &amp; Edward's response to Beaulieu and O'Meara. We have more cupholders, and they come filled with data! [and cheerios]
 
 data/AJB_recs1to500.txt and data/AJB_recs501to1000.txt have the info on the most recent 1000 articles in AJB (downloaded on Dec. 17 from Web of Knowledge. part of 2013 to Nov 2018.
 
