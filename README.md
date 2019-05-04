@@ -1,7 +1,7 @@
 # ReturnOfTheMinivan
 Data for response to Donoghue &amp; Edward's response to Beaulieu and O'Meara. We have more cupholders, and they come filled with data! [and cheerios]
 
-data/AJB_recs1to500.txt and data/AJB_recs501to1000.txt have the info on the most recent 1000 articles in AJB (downloaded on Dec. 17 from Web of Knowledge. part of 2013 to Nov 2018.
+data/AJB_recs1to500.txt and data/AJB_recs501to1000.txt have the info on the most recent 1000 articles in AJB (downloaded on Dec. 17 from Web of Knowledge). part of 2013 to Nov 2018.
 
 * 877 are articles
 * 90 are editorials
@@ -45,3 +45,5 @@ You can edit this to get rid of the references field, then pass to rphylotastic 
 ## To run
 
 This uses [drake](https://ropenscilabs.github.io/drake-manual/index.html) to run the analyses. The necessary functions, packages, etc are described in scripts in the R directory. To rerun the analysis, just `source("make.R")` within R (or, better so it can run unattended: `nohup R CMD BATCH make.R > nohup.out &`).
+
+Make sure you have all the relevant packages (from R/packages.R). For `rphylotastic`, `remotes::install_github("phylotastic/rphylotastic")`.
